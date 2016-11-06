@@ -8,7 +8,10 @@ This script reports cummulative precipitation, if available,
 :REQUIRES:datetime, json, pandas, urllib2 modules and cimis.py
 app_key from CIMIS
 See http://et.water.ca.gov/Home/Faq for more information
+
 :TODO: add support to select specific parameters
+when querying daily data, round convert now to yesterday
+
 
 :AUTHOR: John Franco Saraceno
 :ORGANIZATION: U.S. Geological Survey, United States Department of Interior
@@ -45,18 +48,22 @@ def main(app_key, sites, start, end, Iteminterval):
         dataframe = cimis_to_dataframe(app_key, target, start, end, dataItems)
         if isinstance(dataframe, pd.DataFrame):
             if dataframe is not None:
-                report_precip(dataframe, target, station_info,
-                              field='DayPrecip')
+                report_precip(dataframe, target, station_info,)
                 cimis_data.append(dataframe)
     return cimis_data
 
 if __name__ == "__main__":
-    app_key = 'acac78e2-860f-4194-b27c-ebc296745833'
-    sites = list(np.arange(2, 252, 1))
+    # enter custom CIMIS user app key, available from http://wwwcimis.water.ca.gov/
+    appKey = 'acac78e2-860f-4194-b27c-ebc296745833'  # JFS appKey
+    # list of CIMIS station ID's from which to quuery data
+    sites = list(np.arange(2, 5, 1))
+    # pull daily data; other options are 'hourly' and 'default'
+    # edit convert_data_items function to customize list of queried parameters
+    Iteminterval = 'hourly'
+    # start date fomat in YYYY-MM-DD
     start = '2016-10-01'
-    # end = '2015-10-1'
-    # yesterday
+    # end date fomat in YYYY-MM-DD
+    # e.g. pull all data from start until today
     end = datetime.datetime.now().strftime("%Y-%m-%d")
-    Iteminterval = 'daily'
-
-    cimis_data = main(app_key, sites, start, end, Iteminterval)
+    # retrieve the data for each station and place into a list of dataframes
+    cimis_data = main(appKey, sites, start, end, Iteminterval)
