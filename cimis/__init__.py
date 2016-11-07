@@ -55,12 +55,15 @@ def retrieve_cimis_data(url, target):
 #          print 'Adjust the requested parameters or start and end dates and try again'
 
 
-def parse_cimis_data(records, target):
+def parse_cimis_data(records, target, Iteminterval):
     try:
         dates = []
+        hours = []
         frames = []
         for i, day in enumerate(records):
             dates.append(day['Date'])
+            hours.append(int(day.get('Hour'))/100)
+
             data_values = []
             col_names = []
             for key, values in day.iteritems():
@@ -72,7 +75,11 @@ def parse_cimis_data(records, target):
             df.columns = col_names
             frames.append(df)
         dataframe = pd.concat(frames)
-        dataframe.index = pd.to_datetime(dates)
+        if Iteminterval is ('daily'  or 'default'):
+            dataframe.index = pd.to_datetime(dates)
+        elif Iteminterval is 'hourly':
+            dataframe.index = pd.to_datetime(dates) + pd.to_timedelta(hours, unit='h')
+
         print 'Parsing data from station #{}'.format(target)
         return dataframe
     except ValueError:
@@ -137,14 +144,14 @@ def report_precip(dataframe, target, station_info,):
                                                                                                    dataframe[field].sum()/25.4)
 
 
-def cimis_to_dataframe(app_key, station, start, end, dataItems):
+def cimis_to_dataframe(app_key, station, start, end, dataItems, Iteminterval):
     url ='http://et.water.ca.gov/api/data?appKey=' + app_key + '&targets=' + str(station) + '&startDate=' + start + '&endDate=' + end + '&dataItems=' + dataItems +'&unitOfMeasure=M'
     # url = 'http://et.water.ca.gov/api/data?appKey='+app_key+'&targets=2&startDate=2010-01-01&endDate=2010-02-07&dataItems=hly-air-tmp,hly-dew-pnt,hly-eto,hly-net-rad,hly-asce-eto,hly-asce-etr,hly-precip,hly-rel-hum,hly-res-wind,hly-soil-tmp,hly-sol-rad,hly-vap-pres,hly-wind-dir,hly-wind-spd&unitOfMeasure=M'
     # data = retrieve_cimis_data(url, target)
+    print url
     data = retrieve_cimis_data(url, station)
     try:
-        dataframe = parse_cimis_data(data['Data']['Providers'][0]['Records'],
-                                     station)
+        dataframe = parse_cimis_data(data['Data']['Providers'][0]['Records'],station, Iteminterval)
         return dataframe
     except (TypeError, AttributeError):
         print 'No data to parse'

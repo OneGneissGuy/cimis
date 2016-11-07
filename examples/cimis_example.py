@@ -45,10 +45,11 @@ def main(app_key, sites, start, end, Iteminterval):
     dataItems = convert_data_items(Iteminterval)
     station_info = retrieve_cimis_station_info(verbose=False)
     for target in sites:
-        dataframe = cimis_to_dataframe(app_key, target, start, end, dataItems)
+        dataframe = cimis_to_dataframe(app_key, target, start, end, dataItems,
+                                       Iteminterval)
         if isinstance(dataframe, pd.DataFrame):
             if dataframe is not None:
-                report_precip(dataframe, target, station_info,)
+                report_precip(dataframe, target, station_info)
                 cimis_data.append(dataframe)
     return cimis_data
 
@@ -56,7 +57,7 @@ if __name__ == "__main__":
     # enter custom CIMIS user app key, available from http://wwwcimis.water.ca.gov/
     appKey = 'acac78e2-860f-4194-b27c-ebc296745833'  # JFS appKey
     # list of CIMIS station ID's from which to quuery data
-    sites = list(np.arange(2, 5, 1))
+    sites = list(np.arange(2, 252, 1))
     # pull daily data; other options are 'hourly' and 'default'
     # edit convert_data_items function to customize list of queried parameters
     Iteminterval = 'hourly'
