@@ -57,7 +57,7 @@ if __name__ == "__main__":
     # enter custom CIMIS user app key, available from http://wwwcimis.water.ca.gov/
     appKey = 'acac78e2-860f-4194-b27c-ebc296745833'  # JFS appKey
     # list of CIMIS station ID's from which to quuery data
-    sites = list(np.arange(2, 252, 1))
+    sites = list(np.arange(2, 10, 1))
     # pull daily data; other options are 'hourly' and 'default'
     # edit convert_data_items function to customize list of queried parameters
     Iteminterval = 'hourly'

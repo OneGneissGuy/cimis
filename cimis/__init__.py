@@ -148,7 +148,7 @@ def cimis_to_dataframe(app_key, station, start, end, dataItems, Iteminterval):
     url ='http://et.water.ca.gov/api/data?appKey=' + app_key + '&targets=' + str(station) + '&startDate=' + start + '&endDate=' + end + '&dataItems=' + dataItems +'&unitOfMeasure=M'
     # url = 'http://et.water.ca.gov/api/data?appKey='+app_key+'&targets=2&startDate=2010-01-01&endDate=2010-02-07&dataItems=hly-air-tmp,hly-dew-pnt,hly-eto,hly-net-rad,hly-asce-eto,hly-asce-etr,hly-precip,hly-rel-hum,hly-res-wind,hly-soil-tmp,hly-sol-rad,hly-vap-pres,hly-wind-dir,hly-wind-spd&unitOfMeasure=M'
     # data = retrieve_cimis_data(url, target)
-    print url
+    #    print url
     data = retrieve_cimis_data(url, station)
     try:
         dataframe = parse_cimis_data(data['Data']['Providers'][0]['Records'],station, Iteminterval)
