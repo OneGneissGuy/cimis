@@ -57,12 +57,9 @@ https://bitbucket.org/geofranco/cimis
 
 ::
 
-  $ git clone https://geofranco@bitbucket.org/geofranco/cimis.git
-  $ cd cimis
-  $ python setup.py install
+	$ git clone https://geofranco@bitbucket.org/geofranco/cimis.git
+	$ cd cimis
+	$ python setup.py install
 
 
-Documentation
--------------
 
-See documentation here: 
