@@ -12,9 +12,10 @@ See http://et.water.ca.gov/Rest/Index for more information on CIMIS API.
 
 --------
 
-
 Requirements:
--------------
+### CIMIS user account and appKey ###
+### Required packages: ###
+
 * datetime
 * json
 * numpy
