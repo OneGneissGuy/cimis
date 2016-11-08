@@ -18,5 +18,5 @@ setup(name='cimis',
       version='1.0',
       packages=['cimis'],
       install_requires=['datetime', 'json', 'numpy', 'pandas', 'urllib2'],
-      license='USGS',
+      license=license,
       )
