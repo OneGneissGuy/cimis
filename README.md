@@ -16,12 +16,12 @@ numpy
 pandas
 urllib2
 
-
-Example: Retrieve data from Twitchell Island
+:::python
+#Example: Retrieve data from Twitchell Island
 import datetime
 import numpy as np
 from cimis import run_cimis,retrieve_cimis_station_info
-  :::python
+
 	def main():
 		appKey = ''  # appKey
 		# list of CIMIS station ID's from which to query data
