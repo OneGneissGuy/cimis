@@ -18,9 +18,10 @@ urllib2
 
 :::python
 #Example: Retrieve data from Twitchell Island
-import datetime
-import numpy as np
-from cimis import run_cimis,retrieve_cimis_station_info
+
+	import datetime
+	import numpy as np
+	from cimis import run_cimis,retrieve_cimis_station_info
 
 	def main():
 		appKey = ''  # appKey
