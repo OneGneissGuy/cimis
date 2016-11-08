@@ -8,7 +8,9 @@ and returns data as a dataframe or in the instance of several stations,
 a list of dataframes.
 CIMIS station info can be queried and returned as a dictionary of dictionaries.
 
-see http://et.water.ca.gov/Rest/Index for more information on API
+See http://et.water.ca.gov/Rest/Index for more information on CIMIS API.
+
+--------
 
 
 Requirements:
@@ -46,13 +48,8 @@ urllib2
 		cimis_data = main()
 
 
---------
 
-
-Features:
---------
-
-Installation
+Installation:
 ------------
 
 Or you can get the source code from bitbucket
