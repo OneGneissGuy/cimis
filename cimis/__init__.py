@@ -42,7 +42,8 @@ def retrieve_cimis_station_info(verbose=False):
         else:
             return dict(zip(StationNbr, Name))
     except urllib2.HTTPError:
-        print "HTTPError, Station info not available"
+        print "There was an HTTPError when queriying CIMIS for station \
+        information. Station info not available"
 
 
 def retrieve_cimis_data(url, target):
@@ -51,8 +52,11 @@ def retrieve_cimis_data(url, target):
         print 'Retrieving data for station #{}'.format(target)
         return json.loads(content)
     except urllib2.HTTPError:
-        print 'Could not resolve the http request for station #{}'.format(target)
-#          print 'Adjust the requested parameters or start and end dates and try again'
+        print 'Could not resolve the http request for station \
+        #{}'.format(target)
+    except urllib2.URLError:
+        print 'Could not access the CIMIS database.Verify that you have an\
+        active internet connection and try again.'
 
 
 def parse_cimis_data(records, target, Iteminterval):
@@ -62,8 +66,7 @@ def parse_cimis_data(records, target, Iteminterval):
         frames = []
         for i, day in enumerate(records):
             dates.append(day['Date'])
-            hours.append(int(day.get('Hour'))/100)
-
+            hours.append(int(day.get('Hour','0000'))/100)
             data_values = []
             col_names = []
             for key, values in day.iteritems():
@@ -78,18 +81,18 @@ def parse_cimis_data(records, target, Iteminterval):
         if Iteminterval is ('daily'  or 'default'):
             dataframe.index = pd.to_datetime(dates)
         elif Iteminterval is 'hourly':
-            dataframe.index = pd.to_datetime(dates) + pd.to_timedelta(hours, unit='h')
-
+            dataframe.index = (pd.to_datetime(dates) +
+                               pd.to_timedelta(hours, unit='h'))
         print 'Parsing data from station #{}'.format(target)
         return dataframe
     except ValueError:
         #        pass
-        #        print 'Station {} may be inactive as no data was found for this period. See http://www.cimis.water.ca.gov/Stations.aspx for station status.'.format(target)
-        print 'No data was found for this period. Station {} may be inactive.'.format(target)
+        print 'No data was found for this period. Station {} \
+        may be inactive.'.format(target)
 
 
 def convert_data_items(ItemInterval):
-    # by default, grab all of the avaialble paramters for each option
+    # by default, grab all of the available paramters for each option
     # edit these lists for a custom query of parameters
     if ItemInterval is 'daily':  # daily data
         dataItems_list = ['day-air-tmp-avg',
@@ -140,19 +143,37 @@ def report_precip(dataframe, target, station_info,):
         field = 'DayPrecip'
         if field in dataframe.columns:
             if str(target) in station_info.keys():
-                print 'Cummulative precipitation at {0} for this period was {1:.2f} inches'.format(station_info[str(target)],
-                                                                                                   dataframe[field].sum()/25.4)
+                print 'Cummulative precipitation at {0} for this \
+                period was {1:.2f} inches'.format(station_info[str(target)],
+                                                  dataframe[field].sum()/25.4)
 
 
-def cimis_to_dataframe(app_key, station, start, end, dataItems, Iteminterval):
-    url ='http://et.water.ca.gov/api/data?appKey=' + app_key + '&targets=' + str(station) + '&startDate=' + start + '&endDate=' + end + '&dataItems=' + dataItems +'&unitOfMeasure=M'
-    # url = 'http://et.water.ca.gov/api/data?appKey='+app_key+'&targets=2&startDate=2010-01-01&endDate=2010-02-07&dataItems=hly-air-tmp,hly-dew-pnt,hly-eto,hly-net-rad,hly-asce-eto,hly-asce-etr,hly-precip,hly-rel-hum,hly-res-wind,hly-soil-tmp,hly-sol-rad,hly-vap-pres,hly-wind-dir,hly-wind-spd&unitOfMeasure=M'
+def cimis_to_dataframe(appKey, station, start, end, dataItems, Iteminterval):
+    url = ('http://et.water.ca.gov/api/data?appKey=' + appKey + '&targets='
+            + str(station) + '&startDate=' + start + '&endDate=' + end +
+            '&dataItems=' + dataItems +'&unitOfMeasure=M')
+    #    url = ('http://et.water.ca.gov/api/data?appKey='+appKey+'&targets=140&startDate=2010-01-01&endDate=2010-02-07&dataItems=hly-air-tmp,hly-dew-pnt,hly-eto,hly-net-rad,hly-asce-eto,hly-asce-etr,hly-precip,hly-rel-hum,hly-res-wind,hly-soil-tmp,hly-sol-rad,hly-vap-pres,hly-wind-dir,hly-wind-spd&unitOfMeasure=M')
     # data = retrieve_cimis_data(url, target)
     #    print url
     data = retrieve_cimis_data(url, station)
     try:
-        dataframe = parse_cimis_data(data['Data']['Providers'][0]['Records'],station, Iteminterval)
+        dataframe = parse_cimis_data(data['Data']['Providers'][0]['Records'],
+                                     station, Iteminterval)
         return dataframe
     except (TypeError, AttributeError):
         print 'No data to parse'
 
+
+
+def run_cimis(appKey, sites, start, end, Iteminterval):
+    cimis_data = []
+    dataItems = convert_data_items(Iteminterval)
+    station_info = retrieve_cimis_station_info(verbose=False)
+    for target in sites:
+        dataframe = cimis_to_dataframe(appKey, target, start, end, dataItems,
+                                       Iteminterval)
+        if isinstance(dataframe, pd.DataFrame):
+            if dataframe is not None:
+                report_precip(dataframe, target, station_info)
+                cimis_data.append(dataframe)
+    return cimis_data
