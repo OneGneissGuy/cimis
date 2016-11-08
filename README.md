@@ -87,25 +87,25 @@ distribution constitute any such warranty, and no responsibility is assumed by t
 This software is provided "AS IS."
 
 
-Author
+Author(s):
 ------
-
 John Franco Saraceno <saraceno@usgs.gov>
 
-
-.. _Python: https://www.python.org/
-.. _pytest: http://pytest.org/latest/
-.. _Sphinx: http://sphinx-doc.org/
-.. _public domain: https://en.wikipedia.org/wiki/Public_domain
-.. _CC0 1.0: http://creativecommons.org/publicdomain/zero/1.0/
-.. _U.S. Geological Survey: https://www.usgs.gov/
-.. _USGS: https://www.usgs.gov/
-.. _U.S. Geological Survey (USGS): https://www.usgs.gov/
-.. _United States Department of Interior: https://www.doi.gov/
-.. _official USGS copyright policy: http://www.usgs.gov/visual-id/credit_usgs.html#copyright/
-.. _U.S. Geological Survey (USGS) Software User Rights Notice: http://water.usgs.gov/software/help/notice/
-.. _Python's download page: https://www.python.org/downloads/
-.. _git: https://git-scm.com/
-.. _Distutils: https://docs.python.org/3/library/distutils.html
-.. _Installing Python Modules: https://docs.python.org/3.5/install/
-.. _How Installation Works: https://docs.python.org/3.5/install/#how-installation-works
+More information:
+-----------------
+* Python: https://www.python.org/
+* pytest: http://pytest.org/latest/
+* Sphinx: http://sphinx-doc.org/
+* public domain: https://en.wikipedia.org/wiki/Public_domain
+* CC0 1.0: http://creativecommons.org/publicdomain/zero/1.0/
+* U.S. Geological Survey: https://www.usgs.gov/
+* USGS: https://www.usgs.gov/
+* U.S. Geological Survey (USGS): https://www.usgs.gov/
+* United States Department of Interior: https://www.doi.gov/
+* official USGS copyright policy: http://www.usgs.gov/visual-id/credit_usgs.html#copyright/
+* U.S. Geological Survey (USGS) Software User Rights Notice: http://water.usgs.gov/software/help/notice/
+* Python's download page: https://www.python.org/downloads/
+* git: https://git-scm.com/
+* Distutils: https://docs.python.org/3/library/distutils.html
+* Installing Python Modules: https://docs.python.org/3.5/install/
+* How Installation Works: https://docs.python.org/3.5/install/#how-installation-works
