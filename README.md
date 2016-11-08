@@ -15,14 +15,15 @@ See http://et.water.ca.gov/Rest/Index for more information on CIMIS API.
 
 Requirements:
 -------------
-datetime
-json
-numpy
-pandas
-urllib2
+* datetime
+* json
+* numpy
+* pandas
+* urllib2
 
+Example: Retrieve water year 2016 daily data from Twitchell Island, station 140
+-------------------------------------------------------------------------------
 :::python
-#Example: Retrieve data from Twitchell Island
 
 	import datetime
 	import numpy as np
@@ -62,7 +63,7 @@ https://bitbucket.org/geofranco/cimis
 	$ python setup.py install
 
 
-Disclaimer
+Disclaimer:
 ----------
 
 This software is preliminary or provisional and is subject to revision. It is being provided to meet the need for timely
