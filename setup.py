@@ -1,10 +1,22 @@
-from distutils.core import setup
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
+
+with open("README.md") as readme_file:
+    readme = readme_file.read()
+
+
+with open("LICENSE") as license_file:
+    license = license_file.read()
+
 setup(name='cimis',
-      description='Query DWR CIMIS met data using RESTful API',
-      author='John F Saraceno',
+      description='Python package to query DWR CIMIS WSN data',
+      author='John Franco Saraceno',
       author_email='saraceno@usgs.gov',
-      url='',
+      url='https://bitbucket.org/geofranco/cimis',
       version='1.0',
       packages=['cimis'],
+      install_requires=['datetime', 'json', 'numpy', 'pandas', 'urllib2'],
       license='USGS',
       )

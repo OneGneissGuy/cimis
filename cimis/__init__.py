@@ -164,7 +164,6 @@ def cimis_to_dataframe(appKey, station, start, end, dataItems, Iteminterval):
         print 'No data to parse'
 
 
-
 def run_cimis(appKey, sites, start, end, Iteminterval):
     cimis_data = []
     dataItems = convert_data_items(Iteminterval)
