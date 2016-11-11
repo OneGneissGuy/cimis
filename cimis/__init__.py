@@ -25,6 +25,16 @@ import pandas as pd
 import urllib2
 
 
+def write_output_file(xls_path, cimis_data, site_names):
+    writer = pd.ExcelWriter(xls_path)
+    for index, item in enumerate(cimis_data):
+        print 'Writing {} data to {}'.format(site_names[index],
+                                             xls_path)
+        item.to_excel(writer, sheet_name=site_names[index])
+    writer.save()
+    return
+
+
 def retrieve_cimis_station_info(verbose=False):
     StationNbr = []
     Name = []

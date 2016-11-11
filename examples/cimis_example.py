@@ -26,9 +26,7 @@ Thu Nov 03 14:48:34 2016
 # =============================================================================
 import datetime
 import numpy as np
-import pandas as pd
-from cimis import run_cimis, retrieve_cimis_station_info
-
+from cimis import run_cimis, retrieve_cimis_station_info, write_output_file
 
 # =============================================================================
 # METHODS
@@ -42,15 +40,15 @@ from cimis import run_cimis, retrieve_cimis_station_info
 def main():
     appKey = 'acac78e2-860f-4194-b27c-ebc296745833'  # JFS appKey
     # list of CIMIS station ID's from which to query data
-    sites = list(np.arange(212)) # query every site
+    sites = list(np.arange(212))  # query every site
     sites = [140, 2, 5, 6]  # query a list of known active sites
     #    sites = [140]  # uncomment to query single site
-    sites = [str(i) for i in sites] #  convert list of ints to strings
+    sites = [str(i) for i in sites]  # convert list of ints to strings
     # pull daily data; other options are 'hourly' and 'default'
     # edit convert_data_items function to customize list of queried parameters
     station_info = retrieve_cimis_station_info()
     pulled_site_names = [station_info[x] for x in sites]
-    Iteminterval = 'hourly'
+    Iteminterval = 'daily'
     # start date fomat in YYYY-MM-DD
     start = '2016-10-01'
     # end date fomat in YYYY-MM-DD
@@ -60,13 +58,8 @@ def main():
     df = run_cimis(appKey, sites, start, end, Iteminterval)
     return pulled_site_names, df
 
+
 if __name__ == "__main__":
-    site_names, cimis_data = main()
-#    cimis_data[0].to_csv('HastingsTract.csv')
     xls_path = 'CIMIS_query.xlsx'
-    writer = pd.ExcelWriter(xls_path)
-    for index, item in enumerate(cimis_data):
-        print 'writing {} data to {}'.format(site_names[index],
-                                                     xls_path)
-        item.to_excel(writer, sheet_name=site_names[index])
-    writer.save()
+    site_names, cimis_data = main()
+    write_output_file(xls_path, cimis_data, site_names)
