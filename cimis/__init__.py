@@ -31,7 +31,6 @@ def retrieve_cimis_station_info(verbose=False):
     station_url = 'http://et.water.ca.gov/api/station'
     try:
         content = json.loads(urllib2.urlopen(station_url).read())
-
         stations = content['Stations']
         for i in stations:
             if i['IsActive'] == "True":
@@ -42,8 +41,7 @@ def retrieve_cimis_station_info(verbose=False):
         else:
             return dict(zip(StationNbr, Name))
     except urllib2.HTTPError:
-        print "There was an HTTPError when queriying CIMIS for station \
-        information. Station info not available"
+        print "There was an HTTPError when queriying CIMIS for station information. Station info not available"
 
 
 def retrieve_cimis_data(url, target):
@@ -52,11 +50,9 @@ def retrieve_cimis_data(url, target):
         print 'Retrieving data for station #{}'.format(target)
         return json.loads(content)
     except urllib2.HTTPError:
-        print 'Could not resolve the http request for station \
-        #{}'.format(target)
+        print 'Could not resolve the http request for station #{}'.format(target)
     except urllib2.URLError:
-        print 'Could not access the CIMIS database.Verify that you have an\
-        active internet connection and try again.'
+        print 'Could not access the CIMIS database.Verify that you have an active internet connection and try again.'
 
 
 def parse_cimis_data(records, target, Iteminterval):
