@@ -1,17 +1,17 @@
 cimis : Query CA DWR CIMIS Weather Station Network (WSN)for meterological data
 =============================================================
 
-cimis is a python project which allows communication with the CIMIS WSN api.
+cimis is a python project which allows communication with the CIMIS WSN API.
 
 The main features include routine automatic collecting of data from stations 
 and returns data as a dataframe or in the instance of several stations,
 a list of dataframes.
-CIMIS station info can be queried and returned as a dictionary of dictionaries.
+CIMIS station info can be queried and returned as a dictionary.
 
 See http://et.water.ca.gov/Rest/Index for more information on CIMIS API.
 
 --------
-
+See examples/cimis_example.py for usage
 Requirements:
 --------------
 ### CIMIS user account and appKey ###
@@ -29,14 +29,19 @@ Example: Retrieve water year 2016 daily data from Twitchell Island, station 140
 
 	import datetime
 	import numpy as np
-	from cimis import run_cimis,retrieve_cimis_station_info
+	from cimis import run_cimis, retrieve_cimis_station_info, write_output_file
 
 	def main():
-		appKey = ''  # Unique user appKey 
+		appKey = 'acac78e2-860f-4194-b27c-ebc296745833'  # JFS appKey
 		# list of CIMIS station ID's from which to query data
-		sites = [140]
+		# sites = list(np.arange(212))  # uncomment to query every CIMIS site
+		sites = [140, 2, 5, 6]  # query a list of known active sites
+		# sites = [140]  # uncomment to query single site
+		sites = [str(i) for i in sites]  # convert list of ints to strings
 		# pull daily data; other options are 'hourly' and 'default'
 		# edit convert_data_items function to customize list of queried parameters
+		station_info = retrieve_cimis_station_info()
+		pulled_site_names = [station_info[x] for x in sites]
 		Iteminterval = 'daily'
 		# start date fomat in YYYY-MM-DD
 		start = '2016-10-01'
@@ -44,11 +49,14 @@ Example: Retrieve water year 2016 daily data from Twitchell Island, station 140
 		# e.g. pull all data from start until today
 		end = datetime.datetime.now().strftime("%Y-%m-%d")
 		# retrieve the data for each station and place into a list of dataframes
-		return run_cimis(appKey, sites, start, end, Iteminterval)
+		df = run_cimis(appKey, sites, start, end, Iteminterval)
+		return pulled_site_names, df
+
 
 	if __name__ == "__main__":
-		station_info = retrieve_cimis_station_info(verbose=True)
-		cimis_data = main()
+		xls_path = 'CIMIS_query.xlsx'
+		site_names, cimis_data = main()
+		write_output_file(xls_path, cimis_data, site_names)
 
 
 
