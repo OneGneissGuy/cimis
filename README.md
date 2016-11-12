@@ -1,9 +1,5 @@
-cimis : A python package to query the California 
-=====================================================
-Department of Water Resources CIMIS 
-=====================================================
-Weather Station Network (WSN) for meteorological data
-=====================================================
+# cimis : A python package to query the California Department of Water Resources CIMIS Weather Station Network (WSN) for meteorological data
+
 
 cimis is a python wrapper for communication with the CIMIS WSN API.
 Queried station data is returned as a pandas dataframe timeseries (or a list of dataframes in the case that multiple stations were queried. 
