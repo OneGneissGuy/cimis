@@ -3,8 +3,8 @@ cimis : Query CA DWR CIMIS Weather Station Network (WSN)for meterological data
 
 cimis is a python project which allows communication with the CIMIS WSN API.
 
-The main features include routine automatic collecting of data from stations 
-and returns data as a dataframe or in the instance of several stations,
+Project features include routine automatic collecting of data from stations 
+that returns data as a dataframe or in the instance of several stations,
 a list of dataframes.
 CIMIS station info can be queried and returned as a dictionary.
 
@@ -12,6 +12,7 @@ See http://et.water.ca.gov/Rest/Index for more information on CIMIS API.
 
 --------
 See examples/cimis_example.py for usage
+---------
 Requirements:
 --------------
 ### CIMIS user account and appKey ###
