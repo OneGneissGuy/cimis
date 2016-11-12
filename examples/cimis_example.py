@@ -38,11 +38,11 @@ from cimis import run_cimis, retrieve_cimis_station_info, write_output_file
 
 
 def main():
-    appKey = 'acac78e2-860f-4194-b27c-ebc296745833'  # JFS appKey
+    appKey = ''  # JFS appKey
     # list of CIMIS station ID's from which to query data
-    sites = list(np.arange(212))  # query every site
+    # sites = list(np.arange(212))  # uncomment to query every CIMIS site
     sites = [140, 2, 5, 6]  # query a list of known active sites
-    #    sites = [140]  # uncomment to query single site
+    # sites = [140]  # uncomment to query single site
     sites = [str(i) for i in sites]  # convert list of ints to strings
     # pull daily data; other options are 'hourly' and 'default'
     # edit convert_data_items function to customize list of queried parameters
