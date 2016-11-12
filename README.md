@@ -1,14 +1,12 @@
-cimis : Query CA DWR CIMIS Weather Station Network (WSN)for meterological data
+cimis : A python package to query the California Department of Water Resources CIMIS 
+Weather Station Network (WSN) for meterological data
 =============================================================
 
-cimis is a python project which allows communication with the CIMIS WSN API.
-
-Project features include routine automatic collecting of data from stations 
-that returns data as a dataframe or in the instance of several stations,
-a list of dataframes.
+cimis is a python wrapper for communication with the CIMIS WSN API.
+Queried station data is retuned as a pandas dataframe timerseries. 
 CIMIS station info can be queried and returned as a dictionary.
 
-See http://et.water.ca.gov/Rest/Index for more information on CIMIS API.
+See http://et.water.ca.gov/Rest/Index for more information on the CIMIS API.
 
 --------
 See examples/cimis_example.py for usage
@@ -36,8 +34,8 @@ Example: Retrieve water year 2016 daily data from Twitchell Island, station 140
 		appKey = ''  # JFS appKey
 		# list of CIMIS station ID's from which to query data
 		# sites = list(np.arange(212))  # uncomment to query every CIMIS site
-		sites = [140, 2, 5, 6]  # query a list of known active sites
-		# sites = [140]  # uncomment to query single site
+		# sites = [140, 2, 5, 6]  # query a list of known active sites
+		sites = [140]  # uncomment to query single site
 		sites = [str(i) for i in sites]  # convert list of ints to strings
 		# pull daily data; other options are 'hourly' and 'default'
 		# edit convert_data_items function to customize list of queried parameters
@@ -55,8 +53,11 @@ Example: Retrieve water year 2016 daily data from Twitchell Island, station 140
 
 
 	if __name__ == "__main__":
+		# define the output file path
 		xls_path = 'CIMIS_query.xlsx'
+		# collect queried station name and data in a list of dataframes
 		site_names, cimis_data = main()
+		# write the each station data to a unique sheet into the output xlsx file
 		write_output_file(xls_path, cimis_data, site_names)
 
 
