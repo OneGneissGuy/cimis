@@ -30,7 +30,7 @@ Example: Retrieve water year 2016 daily data from Twitchell Island, station 140
 	def main():
 		appKey = ''  # cimis appKey
 		# list of CIMIS station ID's from which to query data
-		# sites = [140]  # uncomment to query single site
+		sites = [140]  # uncomment to query single site
 		sites = [str(i) for i in sites]  # convert list of ints to strings
 		ItemInterval = 'daily'
 		# start date fomat in YYYY-MM-DD
