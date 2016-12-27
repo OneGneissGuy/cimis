@@ -21,44 +21,37 @@ See http://et.water.ca.gov/Home/Faq for more information
 :VERSION: 0.1
 Thu Nov 03 14:48:34 2016
 """
-# =============================================================================
-# IMPORT STATEMENTS
-# =============================================================================
 import datetime
 from cimis import run_cimis, retrieve_cimis_station_info, write_output_file
 
-# =============================================================================
-# METHODS
-# =============================================================================
-
-# =============================================================================
-# MAIN METHOD AND TESTING AREA
-# =============================================================================
-
-
 def main():
-    appKey = 'acac78e2-860f-4194-b27c-ebc296745833'  # JFS appKey
-    # list of CIMIS station ID's from which to query data
-    # sites = list(np.arange(212))  # uncomment to query every CIMIS site
-    sites = [140,220]  # query a list of known active sites
-    # sites = [140]  # uncomment to query single site
-    sites = [str(i) for i in sites]  # convert list of ints to strings
-    ItemInterval = 'hourly'
-    # start date fomat in YYYY-MM-DD
-    start = '2016-11-01'
-    # end date fomat in YYYY-MM-DD
-    # e.g. pull all data from start until today
-    end = datetime.datetime.now().strftime("%Y-%m-%d")
-    # pull daily data; other options are 'hourly' and 'default'
-    # edit convert_data_items function to customize list of queried parameters
-    station_info = retrieve_cimis_station_info()
-    pulled_site_names = [station_info[x] for x in sites]
-    # retrieve the data for each station and place into a list of dataframes
-    df = run_cimis(appKey, sites, start, end, ItemInterval)
-    return pulled_site_names, df
+	appKey = ''  # cimis appKey
+	# list of CIMIS station ID's from which to query data
+	# sites = [140]  # uncomment to query single site
+	sites = [str(i) for i in sites]  # convert list of ints to strings
+	ItemInterval = 'daily'
+	# start date fomat in YYYY-MM-DD
+	start = '2016-10-01'
+	# end date fomat in YYYY-MM-DD
+	# e.g. pull all data from start until today
+	end = datetime.datetime.now().strftime("%Y-%m-%d")
+	# pull daily data; other options are 'hourly' and 'default'
+	# edit convert_data_items function to customize list of queried parameters
+	station_info = retrieve_cimis_station_info()
+	pulled_site_names = [station_info[x] for x in sites]
+	# retrieve the data for each station and place into a list of dataframes
+	df = run_cimis(appKey, sites, start, end, ItemInterval)
+	return pulled_site_names, df
 
 
 if __name__ == "__main__":
-    xls_path = 'CIMIS_query_example_hourly.xlsx'
-    site_names, cimis_data = main()
-    write_output_file(xls_path, cimis_data, site_names)
+	xls_path = 'CIMIS_query_example_daily.xlsx'
+	site_names, cimis_data = main()
+	write_output_file(xls_path, cimis_data, site_names)
+
+
+
+    if __name__ == "__main__":
+        xls_path = 'CIMIS_query_example_daily.xlsx'
+        site_names, cimis_data = main()
+        write_output_file(xls_path, cimis_data, site_names)

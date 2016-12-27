@@ -8,8 +8,22 @@ This script reports cummulative precipitation, if available,
  for all CIMIS queried stations
 
 CALL SIGNATURE:
-python cimis_example_cmd.py -s stationID(s) -o outfile.xlsx -k appkey -i hourly
+Call signature:
 
+python \path_to_pyfile\cimis_example_cmd.py -s 140 -o outfile.xlsx -k appkey -i hourly -b 2016-10-01 -e 2016-11-01
+call switches are defined below:
+
+-s stations, like 140 220 etc, space delimited
+
+-o name of output xlsx file
+
+-k cimis appkey
+
+-i data interval, such as hourly or daily
+
+-b is begin data in YYYY-MM-DD such as 2016-10-01
+
+-e is end date in YYYY-MM-DD such as 2016-11-01
 :REQUIRES:datetime, json, pandas, urllib2 modules and cimis.py
 app_key from CIMIS
 See http://et.water.ca.gov/Home/Faq for more information

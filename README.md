@@ -25,37 +25,31 @@ Example: Retrieve water year 2016 daily data from Twitchell Island, station 140
 :::python
 
 	import datetime
-	import numpy as np
 	from cimis import run_cimis, retrieve_cimis_station_info, write_output_file
 
 	def main():
-		appKey = ''  # JFS appKey
+		appKey = ''  # cimis appKey
 		# list of CIMIS station ID's from which to query data
-		# sites = list(np.arange(212))  # uncomment to query every CIMIS site
-		# sites = [140, 2, 5, 6]  # query a list of known active sites
-		sites = [140]  # uncomment to query single site
+		# sites = [140]  # uncomment to query single site
 		sites = [str(i) for i in sites]  # convert list of ints to strings
-		# pull daily data; other options are 'hourly' and 'default'
-		# edit convert_data_items function to customize list of queried parameters
-		station_info = retrieve_cimis_station_info()
-		pulled_site_names = [station_info[x] for x in sites]
-		Iteminterval = 'daily'
+		ItemInterval = 'daily'
 		# start date fomat in YYYY-MM-DD
 		start = '2016-10-01'
 		# end date fomat in YYYY-MM-DD
 		# e.g. pull all data from start until today
 		end = datetime.datetime.now().strftime("%Y-%m-%d")
+		# pull daily data; other options are 'hourly' and 'default'
+		# edit convert_data_items function to customize list of queried parameters
+		station_info = retrieve_cimis_station_info()
+		pulled_site_names = [station_info[x] for x in sites]
 		# retrieve the data for each station and place into a list of dataframes
-		df = run_cimis(appKey, sites, start, end, Iteminterval)
+		df = run_cimis(appKey, sites, start, end, ItemInterval)
 		return pulled_site_names, df
 
 
 	if __name__ == "__main__":
-		# define the output file path
-		xls_path = 'CIMIS_query.xlsx'
-		# collect queried station name and data in a list of dataframes
+		xls_path = 'CIMIS_query_example_daily.xlsx'
 		site_names, cimis_data = main()
-		# write the each station data to a unique sheet into the output xlsx file
 		write_output_file(xls_path, cimis_data, site_names)
 
 

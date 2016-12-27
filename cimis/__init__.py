@@ -8,11 +8,6 @@ see http://et.water.ca.gov/Rest/Index for more information on API
 This script supports pulling hourly or daily data by station number
 station list is available here: http://www.cimis.water.ca.gov/Stations.aspx
 
-
-Call signature:
-
-python cimis_example_cmd.py -s cimis_station# -o xls_filename -k app-key -i hourly
-
 :REQUIRES:json, pandas, urllib2
 
 :TODO:
