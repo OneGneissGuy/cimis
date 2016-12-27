@@ -8,6 +8,11 @@ see http://et.water.ca.gov/Rest/Index for more information on API
 This script supports pulling hourly or daily data by station number
 station list is available here: http://www.cimis.water.ca.gov/Stations.aspx
 
+
+Call signature:
+
+python cimis_example_cmd.py -s cimis_station# -o xls_filename -k app-key -i hourly
+
 :REQUIRES:json, pandas, urllib2
 
 :TODO:
@@ -59,9 +64,15 @@ def retrieve_cimis_data(url, target):
         content = urllib2.urlopen(url).read()
         print 'Retrieving data for station #{}'.format(target)
         return json.loads(content)
-    except urllib2.HTTPError:
+    except urllib2.HTTPError as e:
+#        pass
         print 'Could not resolve the http request for station #{}'.format(target)
-    except urllib2.URLError:
+        error_msg = e.read()
+        print error_msg
+        if e.code == 400 and 'The report request exceeds the maximum data limit' in error_msg:
+            print "Shorten the requested period of record.Try limiting the number of paramters or a maximum of 30 days for hourly data."
+    except urllib2.URLError as e:
+        print e.read()
         print 'Could not access the CIMIS database.Verify that you have an active internet connection and try again.'
 
 
@@ -72,7 +83,7 @@ def parse_cimis_data(records, target, Iteminterval):
         frames = []
         for i, day in enumerate(records):
             dates.append(day['Date'])
-            hours.append(int(day.get('Hour','0000'))/100)
+            hours.append(int(day.get('Hour', '0000'))/100)
             data_values = []
             col_names = []
             for key, values in day.iteritems():
@@ -84,9 +95,11 @@ def parse_cimis_data(records, target, Iteminterval):
             df.columns = col_names
             frames.append(df)
         dataframe = pd.concat(frames)
-        if Iteminterval is ('daily'  or 'default'):
+        if Iteminterval == 'daily':
             dataframe.index = pd.to_datetime(dates)
-        elif Iteminterval is 'hourly':
+        elif Iteminterval == 'default':
+            dataframe.index = pd.to_datetime(dates)
+        elif Iteminterval == 'hourly':
             dataframe.index = (pd.to_datetime(dates) +
                                pd.to_timedelta(hours, unit='h'))
         print 'Parsing data from station #{}'.format(target)
@@ -100,7 +113,7 @@ def parse_cimis_data(records, target, Iteminterval):
 def convert_data_items(ItemInterval):
     # by default, grab all of the available paramters for each option
     # edit these lists for a custom query of parameters
-    if ItemInterval is 'daily':  # daily data
+    if ItemInterval == 'daily':  # daily data
         dataItems_list = ['day-air-tmp-avg',
                           'day-air-tmp-max',
                           'day-air-tmp-min',
@@ -109,7 +122,7 @@ def convert_data_items(ItemInterval):
                           'day-asce-eto',
                           'day-asce-etr',
                           'day-precip']
-    elif ItemInterval is 'hourly':  # hourly
+    elif ItemInterval == 'hourly':  # hourly
         dataItems_list = ['hly-air-tmp',
                           'hly-dew-pnt',
                           'hly-eto',
@@ -124,7 +137,7 @@ def convert_data_items(ItemInterval):
                           'hly-vap-pres',
                           'hly-wind-dir',
                           'hly-wind-spd']
-    elif ItemInterval is 'default':  # default CIMIS
+    elif ItemInterval == 'default':  # default CIMIS
         dataItems_list = ['day-asce-eto',
                           'day-precip',
                           'day-sol-rad-avg',
@@ -149,18 +162,15 @@ def report_precip(dataframe, target, station_info,):
         field = 'DayPrecip'
         if field in dataframe.columns:
             if str(target) in station_info.keys():
-                print 'Cummulative precipitation at {0} for this \
-                period was {1:.2f} inches'.format(station_info[str(target)],
+                print 'Cummulative precipitation at {0} for this period was {1:.2f} inches'.format(station_info[str(target)],
                                                   dataframe[field].sum()/25.4)
 
 
 def cimis_to_dataframe(appKey, station, start, end, dataItems, Iteminterval):
+
     url = ('http://et.water.ca.gov/api/data?appKey=' + appKey + '&targets='
             + str(station) + '&startDate=' + start + '&endDate=' + end +
             '&dataItems=' + dataItems +'&unitOfMeasure=M')
-    #    url = ('http://et.water.ca.gov/api/data?appKey='+appKey+'&targets=140&startDate=2010-01-01&endDate=2010-02-07&dataItems=hly-air-tmp,hly-dew-pnt,hly-eto,hly-net-rad,hly-asce-eto,hly-asce-etr,hly-precip,hly-rel-hum,hly-res-wind,hly-soil-tmp,hly-sol-rad,hly-vap-pres,hly-wind-dir,hly-wind-spd&unitOfMeasure=M')
-    # data = retrieve_cimis_data(url, target)
-    #    print url
     data = retrieve_cimis_data(url, station)
     try:
         dataframe = parse_cimis_data(data['Data']['Providers'][0]['Records'],
