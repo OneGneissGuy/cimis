@@ -1,39 +1,36 @@
 # -*- coding: utf-8 -*-
 """
-cimis_example.py
+cimis_example_cmd.py
 :DESCRIPTION: Example command line script to collect data from CIMIS using
 cimis module
 
-This script reports cummulative precipitation, if available,
- for all CIMIS queried stations
+USAGE:
 
-CALL SIGNATURE:
-Call signature:
+cimis_example_cmd.py <sites> <outfile> <appkey> -i hourly -b 2016-10-01 -e 2016-11-01
 
-python \path_to_pyfile\cimis_example_cmd.py -s 140 -o outfile.xlsx -k appkey -i hourly -b 2016-10-01 -e 2016-11-01
-call switches are defined below:
+example: cimis_example_cmd.py 140 outfile.xlsx appkey -i hourly -b 2016-10-01 -e 2016-11-01
 
--s stations, like 140 220 etc, space delimited
+REQUIRED postional args are:
 
--o name of output xlsx file
+sites, a space delimited station list, e.g. 140 220 300
 
--k cimis appkey
+outfile, name of output xlsx file, e.g. outfile.xlsx
 
--i data interval, such as hourly or daily
+appKey, your custom cimis appkey, e.g. acac78e2-817f-4194-e27c-eac296745833
 
--b is begin data in YYYY-MM-DD such as 2016-10-01
+OPTIONS are:
 
--e is end date in YYYY-MM-DD such as 2016-11-01
+-i, --data_interval [hourly]. Sample interfval,options are hourly, daily or default.Default is daily.
+
+-b, --begin [YYYY-MM-DD]. Begin date, e.g. 2016-10-01. Default is one month ago.
+
+-e, --end [YYYY-MM-DD].End data, e.g. 2016-11-01. Default is today.
+
+
 :REQUIRES:datetime, json, pandas, urllib2 modules and cimis.py
 app_key from CIMIS
 See http://et.water.ca.gov/Home/Faq for more information
 
-:TODO:
-1) add support to select specific parameters
-2) when querying daily data, round convert now to yesterday
-3) deal with return of no data when the start data covers a period when the station was down(?)
--keep varyuing the start data until data is returned
-4) write output to a csv/xlsx file
 :AUTHOR: John Franco Saraceno
 :ORGANIZATION: U.S. Geological Survey, United States Department of Interior
 :CONTACT: saraceno@usgs.gov
@@ -60,20 +57,18 @@ from cimis import run_cimis, retrieve_cimis_station_info, write_output_file
 
 def arg_parser():
 #    today = datetime.datetime.now().strftime("%Y-%m-%d") # string
+
     today = datetime.datetime.now()
     one_month_ago = today - dateutil.relativedelta.relativedelta(months=1)
     today_str = today.strftime("%Y-%m-%d")
     one_month_ago_str = one_month_ago.strftime("%Y-%m-%d")
     parser = argparse.ArgumentParser(description='CIMIS DATA QUERY SCRIPT')
-    parser.add_argument('-s', '--sites', type=int, nargs='+',
-                        help='Space delimited sites number(s)',
-                        required=True)
-    parser.add_argument('-o', '--outfile', type=str,
-                        help='Output filename',
-                        required=True)
-    parser.add_argument('-k', '--appKey', type=str,
-                        help='personal app key from CIMIS',
-                        required=True)
+    parser.add_argument('sites', type=int, nargs='+',
+                        help='Space delimited sites number(s)',)
+    parser.add_argument('outfile', type=str,
+                        help='Output filename')
+    parser.add_argument('appKey', type=str,
+                        help='personal app key from CIMIS',)
     parser.add_argument('-i', '--data_interval', type=str,
                         help='data interval: options are daily or hourly',
                         required=False, default='daily')
@@ -92,10 +87,9 @@ def main(**kwargs):
 
     # list of CIMIS station ID's from which to query data
 
-    sites = kwargs.get('sites', list([140]))
-
-    appKey = kwargs.get('appKey',
-                        'acac78e2-860f-4194-b27c-ebc296745833')  # JFS appKey by default
+    sites = kwargs.get('sites')#, list([140]))
+    # JFS appKey by default
+    appKey = kwargs.get('appKey')#,'acac78e2-860f-4194-b27c-ebc296745833')
 
     # pull daily data; other options are 'hourly' and 'default'
     data_interval = kwargs.get('data_interval', 'daily')
@@ -131,7 +125,6 @@ def main(**kwargs):
 
 
 if __name__ == "__main__":
-
     kw_args = arg_parser()
     site_names, cimis_data = main(**kw_args)
     xls_path = kw_args.get('outfile','CIMIS_cmd_line_query.xlsx')

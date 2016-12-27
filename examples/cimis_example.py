@@ -22,20 +22,25 @@ See http://et.water.ca.gov/Home/Faq for more information
 Thu Nov 03 14:48:34 2016
 """
 import datetime
+import dateutil
 from cimis import run_cimis, retrieve_cimis_station_info, write_output_file
 
 
 def main():
-    appKey = ''  # cimis appKey
+    appKey = 'acac78e2-860f-4194-b27c-ebc296745833'  # cimis appKey
     # list of CIMIS station ID's from which to query data
-    # sites = [140]  # uncomment to query single site
+    sites = [140]  # uncomment to query single site
     sites = [str(i) for i in sites]  # convert list of ints to strings
-    ItemInterval = 'daily'
+    ItemInterval = 'hourly'
+    today = datetime.datetime.now()
+    one_month_ago = today - dateutil.relativedelta.relativedelta(months=1)
+    today_str = today.strftime("%Y-%m-%d")
+    one_month_ago_str = one_month_ago.strftime("%Y-%m-%d")
     # start date fomat in YYYY-MM-DD
-    start = '2016-10-01'
+    start = one_month_ago_str
     # end date fomat in YYYY-MM-DD
     # e.g. pull all data from start until today
-    end = datetime.datetime.now().strftime("%Y-%m-%d")
+    end = today_str
     # pull daily data; other options are 'hourly' and 'default'
     # edit convert_data_items function to customize list of queried parameters
     station_info = retrieve_cimis_station_info()
@@ -46,12 +51,7 @@ def main():
 
 
 if __name__ == "__main__":
-    xls_path = 'CIMIS_query_example_daily.xlsx'
+    xls_path = 'CIMIS_query_example.xlsx'
     site_names, cimis_data = main()
     write_output_file(xls_path, cimis_data, site_names)
 
-
-    if __name__ == "__main__":
-        xls_path = 'CIMIS_query_example_daily.xlsx'
-        site_names, cimis_data = main()
-        write_output_file(xls_path, cimis_data, site_names)
