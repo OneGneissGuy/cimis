@@ -58,11 +58,11 @@ Installation:
 ------------
 
 Or you can get the source code from bitbucket
-https://bitbucket.org/geofranco/cimis
+https://github.com/OneGneissGuy/cimis
 
 ::
 
-	$ git clone https://geofranco@bitbucket.org/geofranco/cimis.git
+	$ git clone https://github.com/OneGneissGuy/cimis.git
 	$ cd cimis
 	$ python setup.py install
 
