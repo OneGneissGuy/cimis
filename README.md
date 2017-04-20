@@ -3,7 +3,7 @@
 
 cimis is a python wrapper for communication with the CIMIS WSN API.
 Queried station data is returned as a pandas dataframe timeseries (or a list of dataframes in the case that multiple stations were queried). 
-CIMIS station info returned as a dictionary.
+CIMIS station info is returned as a dictionary.
 
 See http://et.water.ca.gov/Rest/Index for more information on the CIMIS API.
 
