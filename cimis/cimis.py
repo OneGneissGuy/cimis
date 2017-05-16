@@ -4,7 +4,7 @@ Created on Mon May 15 17:55:38 2017
 
 @author: saraceno
 """
-
+from __future__ import print_function
 # -*- coding: utf-8 -*-
 """
 cimis module
@@ -32,6 +32,7 @@ Thu Nov 03 14:48:34 2016
 # =============================================================================
 # IMPORT STATEMENTS
 # =============================================================================
+
 import datetime
 import dateutil
 import json
@@ -42,8 +43,8 @@ import urllib2
 def write_output_file(xls_path, cimis_data, site_names):
     writer = pd.ExcelWriter(xls_path)
     for index, item in enumerate(cimis_data):
-        print 'Writing {} data to {}'.format(site_names[index],
-                                             xls_path)
+        print('Writing {} data to {}'.format(site_names[index],
+                                             xls_path))
         item.to_excel(writer, sheet_name=site_names[index])
     writer.save()
     return
@@ -65,24 +66,30 @@ def retrieve_cimis_station_info(verbose=False):
         else:
             return dict(zip(StationNbr, Name))
     except urllib2.HTTPError:
-        print "There was an HTTPError when queriying CIMIS for station information. Station info not available"
+        print("There was an HTTPError when queriying CIMIS for station \
+              information. Station info not available")
 
 
 def retrieve_cimis_data(url, target):
     try:
         content = urllib2.urlopen(url).read()
-        print 'Retrieving data for station #{}'.format(target)
+        print('Retrieving data for station #{}'.format(target))
         return json.loads(content)
     except urllib2.HTTPError as e:
 #        pass
-        print 'Could not resolve the http request for station #{}'.format(target)
+        print("Could not resolve the http request for station \
+              {}".format(target))
         error_msg = e.read()
-        print error_msg
-        if e.code == 400 and 'The report request exceeds the maximum data limit' in error_msg:
-            print "Shorten the requested period of record.Try limiting the number of paramters or a maximum of 30 days for hourly data."
+        print(error_msg)
+        if e.code == 400 and 'The report request exceeds the \
+                              maximum data limit' in error_msg:
+            print("Shorten the requested period of record.Try limiting \
+                  the number of paramters or a maximum of 30 days for \
+                  hourly data.")
     except urllib2.URLError as e:
-        print e.read()
-        print 'Could not access the CIMIS database.Verify that you have an active internet connection and try again.'
+        print(e.read())
+        print('Could not access the CIMIS database.Verify that you have an \
+               active internet connection and try again.')
 
 
 def parse_cimis_data(records, target, Iteminterval):
@@ -111,12 +118,12 @@ def parse_cimis_data(records, target, Iteminterval):
         elif Iteminterval == 'hourly':
             dataframe.index = (pd.to_datetime(dates) +
                                pd.to_timedelta(hours, unit='h'))
-        print 'Parsing data from station #{}'.format(target)
+        print('Parsing data from station #{}'.format(target))
         return dataframe
     except ValueError:
         #        pass
-        print 'No data was found for this period. Station {} \
-        may be inactive.'.format(target)
+        print('No data was found for this period. Station {} \
+        may be inactive.'.format(target))
 
 
 def convert_data_items(ItemInterval):
@@ -171,8 +178,9 @@ def report_precip(dataframe, target, station_info,):
         field = 'DayPrecip'
         if field in dataframe.columns:
             if str(target) in station_info.keys():
-                print 'Cummulative precipitation at {0} for this period was {1:.2f} inches'.format(station_info[str(target)],
-                                                  dataframe[field].sum()/25.4)
+                print('Cummulative precipitation at {0} for this period was \
+                      {1:.2f} inches'.format(station_info[str(target)],
+                                                  dataframe[field].sum()/25.4))
 
 
 def cimis_to_dataframe(appKey, station, start, end, dataItems, Iteminterval):
@@ -186,27 +194,29 @@ def cimis_to_dataframe(appKey, station, start, end, dataItems, Iteminterval):
                                      station, Iteminterval)
         return dataframe
     except (TypeError, AttributeError):
-        print 'No data to parse'
+        print('No data to parse')
 
 
 def run_cimis(appKey, sites, start, end, Iteminterval):
     cimis_data = []
     dataItems = convert_data_items(Iteminterval)
-    station_info = retrieve_cimis_station_info(verbose=False)
+    #station_info = retrieve_cimis_station_info(verbose=False)
     for target in sites:
         dataframe = cimis_to_dataframe(appKey, target, start, end, dataItems,
                                        Iteminterval)
         if isinstance(dataframe, pd.DataFrame):
             if dataframe is not None:
-                report_precip(dataframe, target, station_info)
+                #report_precip(dataframe, target, station_info)
                 cimis_data.append(dataframe)
     return cimis_data
 
     
 def relative_dates(months_ago=1):
-    """ return a today date string and n months ago realtive to toda date string"""
+    """ return a today date string and
+    n months ago realtive to toda date string"""
     today = datetime.datetime.now()
-    one_month_ago = today - dateutil.relativedelta.relativedelta(months=months_ago)
+    one_month_ago = (today - 
+                     dateutil.relativedelta.relativedelta(months=months_ago))
     today_str = today.strftime("%Y-%m-%d")
     one_month_ago_str = one_month_ago.strftime("%Y-%m-%d")
 
