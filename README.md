@@ -57,7 +57,7 @@ Example: Retrieve water year 2016 daily data from Twitchell Island, station 140
 Installation:
 ------------
 
-Or you can get the source code from bitbucket
+Or you can get the full source code
 https://github.com/OneGneissGuy/cimis
 
 ::
