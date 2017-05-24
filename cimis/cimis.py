@@ -19,7 +19,8 @@ station list is available here: http://www.cimis.water.ca.gov/Stations.aspx
 1) add support to select specific parameters
 2) when querying daily data, round convert now to yesterday
 3) deal with return of no data when the start data covers a period when the station was down(?)
--keep varying the start data until data is returned
+One solution would be to keep varying the start data until data is returned
+4) Add ability to query station by name in addition to CIMIS number
 :REQUIRES: pandas, urllib2
 
 :TODO:
@@ -72,13 +73,14 @@ def retrieve_cimis_station_info(verbose=False):
 
 def retrieve_cimis_data(url, target):
     try:
-        content = urllib2.urlopen(url).read()
-        print('Retrieving data for station #{}'.format(target))
+        stations = retrieve_cimis_station_info()
+        station = stations[str(target)]
+
+        content = urllib2.urlopen(url).read()        
+        print('Retrieving data for {}'.format(station))
         return json.loads(content)
     except urllib2.HTTPError as e:
-#        pass
-        print("Could not resolve the http request for station \
-              {}".format(target))
+        print("Could not resolve the http request for {}".format(station))
         error_msg = e.read()
         print(error_msg)
         if e.code == 400 and 'The report request exceeds the \
@@ -118,7 +120,7 @@ def parse_cimis_data(records, target, Iteminterval):
         elif Iteminterval == 'hourly':
             dataframe.index = (pd.to_datetime(dates) +
                                pd.to_timedelta(hours, unit='h'))
-        print('Parsing data from station #{}'.format(target))
+        #print('Parsing data from station #{}'.format(target))
         return dataframe
     except ValueError:
         #        pass
@@ -213,7 +215,7 @@ def run_cimis(appKey, sites, start, end, Iteminterval):
     
 def relative_dates(months_ago=1):
     """ return a today date string and
-    n months ago realtive to toda date string"""
+    n months ago relative to todays date string"""
     today = datetime.datetime.now()
     one_month_ago = (today - 
                      dateutil.relativedelta.relativedelta(months=months_ago))
