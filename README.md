@@ -27,15 +27,14 @@ Example: Retrieve water year 2016 daily data from Twitchell Island, station 140
 	import datetime
 	from cimis import run_cimis, retrieve_cimis_station_info, write_output_file
 
-	def main():
-		appKey = ''  # cimis appKey
+	def main(appKey):
 		# list of CIMIS station ID's from which to query data
-		sites = [140]  # uncomment to query single site
+		sites = [140]  # can be a single or list of sites
 		sites = [str(i) for i in sites]  # convert list of ints to strings
 		ItemInterval = 'daily'
-		# start date fomat in YYYY-MM-DD
+		# start date format in YYYY-MM-DD
 		start = '2016-10-01'
-		# end date fomat in YYYY-MM-DD
+		# end date format in YYYY-MM-DD
 		# e.g. pull all data from start until today
 		end = datetime.datetime.now().strftime("%Y-%m-%d")
 		# pull daily data; other options are 'hourly' and 'default'
@@ -49,7 +48,8 @@ Example: Retrieve water year 2016 daily data from Twitchell Island, station 140
 
 	if __name__ == "__main__":
 		xls_path = 'CIMIS_query_example_daily.xlsx'
-		site_names, cimis_data = main()
+		MYAPPKEY = '' # unique cimis appKey
+		site_names, cimis_data = main(MYAPPKEY)
 		write_output_file(xls_path, cimis_data, site_names)
 ```
 
