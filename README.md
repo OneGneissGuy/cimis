@@ -1,7 +1,7 @@
 # cimis : A python package to query the California Department of Water Resources CIMIS Weather Station Network (WSN) for meteorological data
 
 
-cimis is a python wrapper for communication with the CIMIS WSN API.
+`cimis` is a python wrapper for communication with the CIMIS WSN API.
 Queried station data is returned as a pandas dataframe timeseries (or a list of dataframes in the case that multiple stations were queried). 
 CIMIS station info is returned as a dictionary.
 
@@ -11,8 +11,8 @@ See examples/cimis_example.py for usage
 
 Requirements:
 --------------
-### CIMIS user account and appKey ###
-### Required packages: ###
+### 1. CIMIS user account and appKey ###
+### 2. python dependencies: ###
 
 * datetime
 * json
@@ -22,7 +22,7 @@ Requirements:
 
 Example: Retrieve water year 2016 daily data from Twitchell Island, station 140
 -------------------------------------------------------------------------------
-:::python
+```python
 
 	import datetime
 	from cimis import run_cimis, retrieve_cimis_station_info, write_output_file
@@ -51,7 +51,7 @@ Example: Retrieve water year 2016 daily data from Twitchell Island, station 140
 		xls_path = 'CIMIS_query_example_daily.xlsx'
 		site_names, cimis_data = main()
 		write_output_file(xls_path, cimis_data, site_names)
-
+```
 
 
 Installation:
@@ -94,7 +94,7 @@ This software is provided "AS IS."
 
 Author(s):
 ------
-John Franco Saraceno, <saraceno@usgs.gov>
+John Franco Saraceno, <jfsaraceno@gmail.com>
 
 More information:
 -----------------
